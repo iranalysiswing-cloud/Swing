@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Swing Trading Backtest App"
 requires-python = ">=3.10"
 dependencies = [
-    "flet==0.25.2",
+    "flet[all]==0.25.2",
     "yfinance==0.2.50",
     "pandas==2.2.3",
     "numpy==1.26.4",
