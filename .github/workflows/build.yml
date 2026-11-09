@@ -2,34 +2,28 @@ name: Build APK
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build:
+  build-apk:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Flet APK
+        uses: flet-dev/flet-build-action@v1
+        id: build
         with:
-          python-version: '3.11'
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-      - name: Install Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Install flet and deps
-        run: |
-          pip install flet==0.25.2
-          pip install -r requirements.txt
-      - name: Build APK
-        run: flet build apk --verbose
+          target: apk
+          runner-python-version: "3.12"
+          bundled-python-version: "3.12"
+          build-number: ${{ github.run_number }}
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: swing-tester-apk
-          path: build/apk/*.apk
+          path: ${{ steps.build.outputs.archive-path }}
+          if-no-files-found: error
